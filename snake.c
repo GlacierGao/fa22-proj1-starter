@@ -33,22 +33,35 @@ int main(int argc, char* argv[]) {
   if (in_filename != NULL) {
     // TODO: Load the board from in_filename
     // TODO: If the file doesn't exist, return -1
+    state = load_board(in_filename);
     // TODO: Then call initialize_snakes on the state you made
+    state = initialize_snakes(state);
+    if (state == NULL) {
+      // state = create_default_state();  
+      return -1; // 最后一行的说明
+    }
   } else {
     // TODO: Create default state
+    state = create_default_state();
   }
 
   // TODO: Update state. Use the deterministic_food function
   // (already implemented in snake_utils.h) to add food.
+  int (*af)(game_state_t*) = deterministic_food;
+  update_state(state, af);
+  // update_state(state, deterministic_food); // 不需要&，存在函数名到函数指针的隐式转化
 
   // Write updated board to file or stdout
   if (out_filename != NULL) {
     // TODO: Save the board to out_filename
+    save_board(state, out_filename);
   } else {
     // TODO: Print the board to stdout
+    print_board(state, stdout);
   }
 
   // TODO: Free the state
+  free_state(state);
 
   return 0;
 }
